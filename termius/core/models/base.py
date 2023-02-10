@@ -87,11 +87,10 @@ class Model(AbstractModel):
         fields = self.__filter_fields(kwargs)
         super(Model, self).__init__(*args, **fields)
 
-        is_need_to_patch_remote = (
-            self.remote_instance and
-            not isinstance(self.remote_instance, RemoteInstance)
-        )
-        if is_need_to_patch_remote:
+        if is_need_to_patch_remote := (
+            self.remote_instance
+            and not isinstance(self.remote_instance, RemoteInstance)
+        ):
             self.remote_instance = RemoteInstance(self.remote_instance)
 
     @classmethod

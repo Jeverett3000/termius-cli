@@ -10,7 +10,7 @@ class SshCommandFormatterMixin(object):
     # pylint: disable=no-self-use
     def render_command(self, ssh_config, address, ssh_key_file, pfrule=None):
         """Generate ssh command call."""
-        identity = ssh_config.get('identity', dict())
+        identity = ssh_config.get('identity', {})
         username = identity.get('username', '')
         return ' '.join([i for i in [
             'ssh',
@@ -28,22 +28,20 @@ class SshCommandFormatterMixin(object):
 
 def ssh_auth(username, address):
     """Render username and address part."""
-    if username:
-        return '{}@{}'.format(username, address)
-    return '{}'.format(address)
+    return f'{username}@{address}' if username else f'{address}'
 
 
 def format_identity_file(ssh_key_file):
     """Render identity file option."""
     if ssh_key_file:
         safe_key_path = shlex_quote(str(ssh_key_file))
-        return '-i {}'.format(safe_key_path)
+        return f'-i {safe_key_path}'
     return ''
 
 
 def format_port(port):
     """Render port option."""
-    return '-p {}'.format(port) if port else ''
+    return f'-p {port}' if port else ''
 
 
 def format_pfrule(pfrule):
@@ -66,8 +64,7 @@ def format_use_ssh_key(use_ssh_key):
 
 def format_timeout(timeout):
     """Render server alive interval option."""
-    format_str = '-o ServerAliveInterval={}'.format
-    return format_str(timeout) if timeout else ''
+    return f'-o ServerAliveInterval={timeout}' if timeout else ''
 
 
 def format_keep_alive_packages(keep_alive_packages):

@@ -51,7 +51,7 @@ class GroupCommand(GroupStackGetterMixin, DetailCommand):
         if not group_id:
             return
         group_stack = self.get_group_stack(instance)
-        not_unique = any([i.id for i in group_stack if i.id == group_id])
+        not_unique = any(i.id for i in group_stack if i.id == group_id)
         if not_unique:
             raise InvalidArgumentException('Cyclic group founded!')
 

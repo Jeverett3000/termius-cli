@@ -47,12 +47,8 @@ class SSHConfigHostAdapter(SshConfigMergerMixin):
             'port': ssh_config['port'] or 22
         }
 
-        host_key_label = self.get_instance_ssh_key_label(ssh_config)
-
-        if host_key_label:
-            adapted.update(
-                identityfile='~/.termius/ssh_keys/' + host_key_label
-            )
+        if host_key_label := self.get_instance_ssh_key_label(ssh_config):
+            adapted.update(identityfile=f'~/.termius/ssh_keys/{host_key_label}')
 
         return adapted
 

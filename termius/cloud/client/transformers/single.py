@@ -49,11 +49,9 @@ class BulkPrimaryKeyTransformer(BulkEntryBaseTransformer):
             raise SkipField
 
         remote_instance_id = self.id_from_payload(payload)
-        model = self.storage.get(
-            self.model_class,
-            **{'remote_instance.id': remote_instance_id}
+        return self.storage.get(
+            self.model_class, **{'remote_instance.id': remote_instance_id}
         )
-        return model
 
     def to_payload(self, model):
         """Convert model to primary key or to set/id reference."""
@@ -101,7 +99,7 @@ class BulkEntryTransformer(GetPrimaryKeyTransformerMixin,
             zipped_remote_instance = map_zip_model_fields(
                 model.remote_instance, self.remote_instance_attrgetter
             )
-            payload.update(zipped_remote_instance)
+            payload |= zipped_remote_instance
 
         for field, mapping in model.fields.items():
             self.serialize_field(payload, model, field, mapping)
@@ -123,8 +121,7 @@ class BulkEntryTransformer(GetPrimaryKeyTransformerMixin,
     def serialize_related_field(self, model, field, mapping):
         """Transform relation to payload."""
         related_transformer = self.get_primary_key_transformer(mapping.model)
-        fk_payload = related_transformer.to_payload(getattr(model, field))
-        return fk_payload
+        return related_transformer.to_payload(getattr(model, field))
 
     def to_model(self, payload):
         """Convert payload to model."""
@@ -176,8 +173,7 @@ class BulkEntryTransformer(GetPrimaryKeyTransformerMixin,
 
     def initialize_model(self):
         """Generate new model using payload."""
-        model = self.model_class()
-        return model
+        return self.model_class()
 
     # pylint: disable=no-self-use
     def create_remote_instance(self, payload):

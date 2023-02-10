@@ -108,10 +108,10 @@ class BindingParser(object):
 
     @classmethod
     def _parse(cls, regexp, binding_str):
-        matched = regexp.match(binding_str)
-        if not matched:
+        if matched := regexp.match(binding_str):
+            return dict([cls.patch_ports(i) for i in matched.groupdict().items()])
+        else:
             raise InvalidBinding('Invalid binding format.')
-        return dict([cls.patch_ports(i) for i in matched.groupdict().items()])
 
     @classmethod
     def local(cls, binding_str):

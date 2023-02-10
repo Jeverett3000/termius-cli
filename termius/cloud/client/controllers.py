@@ -18,8 +18,7 @@ class CryptoController(object):
     # pylint: disable=no-self-use
     def _mutate_fields(self, model, mutator):
         for i in model.crypto_fields:
-            crypto_field = getattr(model, i)
-            if crypto_field:
+            if crypto_field := getattr(model, i):
                 setattr(model, i, mutator(crypto_field))
         return model
 
@@ -71,10 +70,7 @@ class ApiController(object):
     def post_bulk(self):
         """Send local instances."""
         mapped = self.mapping['bulk']
-        model = {}
-        model['last_synced'] = self.config.get(
-            'CloudSynchronization', 'last_synced'
-        )
+        model = {'last_synced': self.config.get('CloudSynchronization', 'last_synced')}
         assert model['last_synced']
         out_model = self._post(mapped, model)
         self.config.set('CloudSynchronization', 'last_synced',
@@ -92,22 +88,19 @@ class ApiController(object):
         transformer = self._create_transformer(mapped)
         payload = transformer.to_payload(request_model)
         response = self.api.post(mapped['url'], payload)
-        response_model = transformer.to_model(response)
-        return response_model
+        return transformer.to_model(response)
 
     def _put(self, mapped, request_model):
         transformer = self._create_transformer(mapped)
         payload = transformer.to_payload(request_model)
         response = self.api.put(mapped['url'], payload)
-        response_model = transformer.to_model(response)
-        return response_model
+        return transformer.to_model(response)
 
     def _get(self, mapped):
         transformer = self._create_transformer(mapped)
         response = self.api.get(mapped['url'])
 
-        model = transformer.to_model(response)
-        return model
+        return transformer.to_model(response)
 
     def _create_transformer(self, mapped):
         return mapped['transformer'](

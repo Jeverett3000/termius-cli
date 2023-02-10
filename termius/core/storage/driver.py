@@ -70,7 +70,7 @@ DRIVERS = OrderedDict((
 @contextmanager
 def atomic_file(filename, write_mode, filename_mode):
     """Open file and atomic write it."""
-    tempname = filename + '.tmp'
+    tempname = f'{filename}.tmp'
     try:
         with open(tempname, write_mode) as fileobj:
             yield fileobj
@@ -140,7 +140,7 @@ class PersistentDict(OrderedDict):
         try:
             DRIVERS[self._format].dump(fileobj, self)
         except KeyError:
-            raise NotImplementedError('Unknown format: ' + repr(self._format))
+            raise NotImplementedError(f'Unknown format: {repr(self._format)}')
 
     def load(self, fileobj):
         """Populate self with fileobj content."""

@@ -161,4 +161,4 @@ class CryptoCommand(CloudSynchronizationCommand):
 
         for i in parsed_args.text:
             result_text = getattr(cryptor, parsed_args.operation)(i)
-            self.app.stdout.write('{}\n'.format(result_text))
+            self.app.stdout.write(f'{result_text}\n')

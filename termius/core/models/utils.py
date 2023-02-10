@@ -49,8 +49,7 @@ class Merger(object):
     def merge(self):
         """Merge instances of full_stack to single instance."""
         entries = self.get_entry_stack()
-        merged = functools.reduce(self.reducer, entries, self.initial)
-        return merged
+        return functools.reduce(self.reducer, entries, self.initial)
 
     def reducer(self, accumulator, value):
         """Merge value fields to accumulator."""

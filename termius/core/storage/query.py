@@ -46,5 +46,4 @@ class Query(object):
     def __call__(self, obj):
         """Call all operators for object and union results."""
         filters = [i(obj) for i in self.operators]
-        result = self.operators_union(filters)
-        return result
+        return self.operators_union(filters)

@@ -48,10 +48,7 @@ class API(object):
 
     def __init__(self, username=None, apikey=None):
         """Construct new API instance."""
-        if username and apikey:
-            self.auth = TermiusAuth(username, apikey)
-        else:
-            self.auth = None
+        self.auth = TermiusAuth(username, apikey) if username and apikey else None
 
     def set_auth(self, username, apikey):
         """Provide credentials."""

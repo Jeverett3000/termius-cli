@@ -47,12 +47,12 @@ class BasePortingProvider(SshConfigMergerMixin):
     def is_host_exists(self, new_host):
         """Retrieve exited host for new host."""
         existed_hosts = self.storage.filter(Host, label=new_host.label)
-        for host in existed_hosts:
-            if host.group and new_host.group:
-                if host.group.label == new_host.group.label:
-                    return True
-
-        return False
+        return any(
+            host.group
+            and new_host.group
+            and host.group.label == new_host.group.label
+            for host in existed_hosts
+        )
 
     def get_existed_key(self, new_ssh_key):
         """Retrieve exited key for new key."""

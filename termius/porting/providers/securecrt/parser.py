@@ -25,17 +25,15 @@ class SecureCRTConfigParser(object):
         """Parse SecureCRT sessions."""
         for session in sessions:
             if session.get('name') not in self.meta_sessions:
-                if not self.is_session_group(session):
-                    host = self.make_host(session)
-                    if not host:
-                        continue
-                    parent_node[host['label']] = host
-                else:
+                if self.is_session_group(session):
                     parent_node[session.get('name')] = {'__group': True}
                     self.parse_sessions(
                         list(session),
                         parent_node[session.get('name')]
                     )
+
+                elif host := self.make_host(session):
+                    parent_node[host['label']] = host
 
     def is_session_group(self, session):
         """Check node element type."""
@@ -78,16 +76,18 @@ class SecureCRTConfigParser(object):
         port = self.get_element_by_name(session_attrs, '[SSH2] Port')
         username = self.get_element_by_name(session_attrs, 'Username')
 
-        if not self.check_attribute(hostname):
-            return None
-
-        return {
-            'label': session.get('name'),
-            'hostname': hostname.text,
-            'port': port.text if self.check_attribute(port) else '22',
-            'username': username.text
-            if self.check_attribute(username) else None
-        }
+        return (
+            {
+                'label': session.get('name'),
+                'hostname': hostname.text,
+                'port': port.text if self.check_attribute(port) else '22',
+                'username': username.text
+                if self.check_attribute(username)
+                else None,
+            }
+            if self.check_attribute(hostname)
+            else None
+        )
 
     def check_attribute(self, attr):
         """Check an attribute."""
@@ -95,8 +95,6 @@ class SecureCRTConfigParser(object):
 
     def get_element_by_name(self, elements, name):
         """Get SecureCRT config block."""
-        for element in elements:
-            if element.get('name') == name:
-                return element
-
-        return None
+        return next(
+            (element for element in elements if element.get('name') == name), None
+        )

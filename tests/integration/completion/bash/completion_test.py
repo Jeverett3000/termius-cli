@@ -24,7 +24,7 @@ class Completion():
 
     def prepare(self, program, command):
         self.program = program
-        self.COMP_LINE = '%s %s' % (program, command)
+        self.COMP_LINE = f'{program} {command}'
         self.COMP_WORDS = self.COMP_LINE.rstrip()
 
         args = command.split()
@@ -150,12 +150,9 @@ class TermiusTestCase(BashCompletionTest):
         second = self.client.create_identity('xanthorrhoeaceae', True)
         instances = (first, second)
         for i in ('host', 'group'):
-            self.run_complete('{} --identity '.format(i),
-                              ids_labels_completion(instances))
-            self.run_complete('{} --identity As'.format(i),
-                              'Asparagales')
-            self.run_complete('{} --identity xa'.format(i),
-                              'xanthorrhoeaceae')
+            self.run_complete(f'{i} --identity ', ids_labels_completion(instances))
+            self.run_complete(f'{i} --identity As', 'Asparagales')
+            self.run_complete(f'{i} --identity xa', 'xanthorrhoeaceae')
 
     def test_info_group_label_and_ids(self):
         self.run_complete('info', '')
@@ -163,10 +160,10 @@ class TermiusTestCase(BashCompletionTest):
         second = self.client.create_group('xanthorrhoeaceae')
         instances = (first, second)
         for option in ('-g', '--group'):
-            subcommand = 'info {} '.format(option)
+            subcommand = f'info {option} '
             self.run_complete(subcommand, ids_labels_completion(instances))
             self.run_complete(subcommand + ' As'.format(option), 'Asparagales')
-            self.run_complete(subcommand + ' xa', 'xanthorrhoeaceae')
+            self.run_complete(f'{subcommand} xa', 'xanthorrhoeaceae')
 
     def test_update_entity(self):
         entity = 'host'
@@ -174,14 +171,14 @@ class TermiusTestCase(BashCompletionTest):
         first = self.client.create_host('localhost', 'Asparagales')
         second = self.client.create_host('localhost', 'xanthorrhoeaceae')
         instances = (first, second)
-        self.run_complete(entity + ' ', ids_labels_completion(instances))
-        self.run_complete(entity + ' As', 'Asparagales')
-        self.run_complete(entity + ' xa', 'xanthorrhoeaceae')
+        self.run_complete(f'{entity} ', ids_labels_completion(instances))
+        self.run_complete(f'{entity} As', 'Asparagales')
+        self.run_complete(f'{entity} xa', 'xanthorrhoeaceae')
 
     def test_list_format_types(self):
-        for subcommand  in ('hosts', 'groups', 'tags', 'identities', 'snippets', 'pfrules', 'keys'):
-            self.run_complete(subcommand + ' -f ', 'csv json table value yaml')
-            self.run_complete(subcommand + ' --format ', 'csv json table value yaml')
+        for subcommand in ('hosts', 'groups', 'tags', 'identities', 'snippets', 'pfrules', 'keys'):
+            self.run_complete(f'{subcommand} -f ', 'csv json table value yaml')
+            self.run_complete(f'{subcommand} --format ', 'csv json table value yaml')
 
     def run_complete(self, command, expected):
         super(TermiusTestCase, self).run_complete(

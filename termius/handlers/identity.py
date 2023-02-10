@@ -39,9 +39,7 @@ class IdentityCommand(SshKeyGeneratorMixin, DetailCommand):
             return self.generate_ssh_key_instance(
                 args.identity_file, self.storage
             )
-        if args.ssh_key:
-            return self.get_safely_instance(SshKey, args.ssh_key)
-        return None
+        return self.get_safely_instance(SshKey, args.ssh_key) if args.ssh_key else None
 
     def extend_parser(self, parser):
         """Add more arguments to parser."""
@@ -65,10 +63,10 @@ class IdentityCommand(SshKeyGeneratorMixin, DetailCommand):
         Models will match id and label with passed ids__names list.
         """
         instances = super(IdentityCommand, self).get_objects(ids__names)
-        visible_instances = [i for i in instances if i.is_visible]
-        if not visible_instances:
+        if visible_instances := [i for i in instances if i.is_visible]:
+            return instances
+        else:
             raise DoesNotExistException("There aren't any instance.")
-        return instances
 
 
 class IdentitiesCommand(ListCommand):

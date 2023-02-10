@@ -32,8 +32,7 @@ class SecureCRTPortingProvider(BasePortingProvider):
 
         root_group = Group(label='SecureCRT')
 
-        identity_paths = self.parser.parse_identity()
-        if identity_paths:
+        if identity_paths := self.parser.parse_identity():
             self.logger.info('Found private key path: %s', identity_paths[0])
             self.logger.info('Found public key path: %s', identity_paths[1])
             try:

@@ -83,10 +83,9 @@ class DetailCommand(GetRelationMixin, GetObjectsMixin,
     def validate_args(self, args, action):
         """Raise ArgumentRequiredException if any required options' missed."""
         arg_list = getattr(self.required_options, action)
-        missed_options_list = [
+        if missed_options_list := [
             i for i in arg_list if getattr(args, i) is None
-        ]
-        if missed_options_list:
+        ]:
             message = self.generate_requirement_message(missed_options_list)
             raise ArgumentRequiredException(message)
 
@@ -94,5 +93,5 @@ class DetailCommand(GetRelationMixin, GetObjectsMixin,
     def generate_requirement_message(self, options):
         """Render error message for missed required options."""
         if len(options) == 1:
-            return 'Option {} is required!'.format(options[0])
-        return 'Options {} are required!'.format(','.join(options))
+            return f'Option {options[0]} is required!'
+        return f"Options {','.join(options)} are required!"

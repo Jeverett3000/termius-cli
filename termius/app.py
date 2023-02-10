@@ -38,7 +38,7 @@ class TermiusApp(App):
         )
 
         self.configure_signals()
-        self.directory_path = Path(expanduser('~/.{}/'.format(self.NAME)))
+        self.directory_path = Path(expanduser(f'~/.{self.NAME}/'))
         if not self.directory_path.is_dir():
             self.directory_path.mkdir(parents=True)
 

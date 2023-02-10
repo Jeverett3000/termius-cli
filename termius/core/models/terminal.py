@@ -99,8 +99,7 @@ class SshConfig(Model):
 
     def __setattr__(self, name, value):
         """Set attribute, but patch value before assign."""
-        patch_method = getattr(self, 'patch_' + name)
-        if patch_method:
+        if patch_method := getattr(self, f'patch_{name}'):
             value = patch_method(value)
 
         self[name] = value
@@ -117,9 +116,7 @@ class SshConfig(Model):
     def transform_bool(self, value):
         """Transform value to bool or return None."""
         if value not in ('yes', 'no'):
-            if isinstance(value, bool):
-                return value
-            return None
+            return value if isinstance(value, bool) else None
         return value == 'yes'
 
     # pylint: disable=no-self-use,unused-argument

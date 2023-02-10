@@ -88,8 +88,7 @@ class RelatedGetStrategy(GetStrategy):
         fk_fields = model.fk_field_names()
         for field in fk_fields:
             mapping = model.fields[field]
-            submodel_id = getattr(result, field)
-            if submodel_id:
+            if submodel_id := getattr(result, field):
                 submodel = self.storage.get_single_by_id(
                     mapping.model, submodel_id
                 )
@@ -128,8 +127,7 @@ class SoftDeleteStrategy(DeleteStrategy):
             data = self.storage.low_get(self.delete_sets_class.set_name)
         except KeyError:
             data = {}
-        model = self.delete_sets_class(data)
-        return model
+        return self.delete_sets_class(data)
 
     def set_delete_sets(self, deleted):
         """Store delete sets into the storage."""

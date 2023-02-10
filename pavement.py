@@ -41,7 +41,7 @@ def create_compeletion(info):
     if completion_path.exists():
         info('Completion exists')
     else:
-        sh('{} complete > {}'.format(cli_command_name, completion_path))
+        sh(f'{cli_command_name} complete > {completion_path}')
 
 
 @task

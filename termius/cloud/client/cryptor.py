@@ -93,12 +93,11 @@ class CryptoSettings(object):
 
     def get_cipher(self, initialization_vector):
         """Generate cipher for AES algorithm."""
-        cipher = Cipher(
+        return Cipher(
             algorithms.AES(self.encryption_key),
             modes.CBC(initialization_vector),
-            backend=self.backend
+            backend=self.backend,
         )
-        return cipher
 
 
 class RNCryptor(CryptoSettings):
@@ -192,8 +191,7 @@ class RNCryptor(CryptoSettings):
         data = to_bytes(data)
 
         padder = padding.PKCS7(self.AES_BLOCK_SIZE).padder()
-        padded_data = padder.update(data) + padder.finalize()
-        return padded_data
+        return padder.update(data) + padder.finalize()
 
     # pylint: disable=no-self-use
     def post_encrypt_data(self, data):

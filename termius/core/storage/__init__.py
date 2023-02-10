@@ -146,8 +146,7 @@ class ApplicationStorage(object):
             list = storage.get(Model, any, **{'field.ge': 1, 'field.le': 5}
         """
         founded_models = self.filter(model_class, query_union, **kwargs)
-        single_model = self._validate_the_single_model(founded_models)
-        return single_model
+        return self._validate_the_single_model(founded_models)
 
     def get_single_by_id(self, model_class, identificator):
         """Retrieve single entry by id from storage."""
@@ -168,8 +167,7 @@ class ApplicationStorage(object):
         assert kwargs
         query = Query(query_union, **kwargs)
         models = self.get_all(model_class)
-        founded_models = [i for i in models if query(i)]
-        return founded_models
+        return [i for i in models if query(i)]
 
     def exclude(self, model_class, query_union=None, **kwargs):
         """Exclude the model list when matches the lookups.
@@ -181,8 +179,7 @@ class ApplicationStorage(object):
         assert kwargs
         query = Query(query_union, **kwargs)
         models = self.get_all(model_class)
-        founded_models = [i for i in models if not query(i)]
-        return founded_models
+        return [i for i in models if not query(i)]
 
     def get_all(self, model_class):
         """Retrieve full model list."""
@@ -195,10 +192,9 @@ class ApplicationStorage(object):
         assert isinstance(model_class, type)
         name = model_class.set_name
         data = self.driver.setdefault(name, self.defaultstorage())
-        models = self.defaultstorage(
+        return self.defaultstorage(
             (model_contructor(i, model_class) for i in data)
         )
-        return models
 
     def _internal_update(self, model):
         models = self._internal_get_all(type(model))

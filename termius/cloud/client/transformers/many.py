@@ -35,8 +35,7 @@ class SupportedModelsMixin(object):
     @property
     def supported_models(self):
         """Return model tuple to sync."""
-        sync_keys = self.account_manager.get_settings()['synchronize_key']
-        if sync_keys:
+        if sync_keys := self.account_manager.get_settings()['synchronize_key']:
             return (
                 SshKey, Snippet,
                 Identity, SshConfig,
@@ -117,8 +116,7 @@ class BulkTransformer(CryptoChildTransformerCreatorMixin,
 
     def to_payload(self, model):
         """Convert model to payload with set list."""
-        payload = {}
-        payload['last_synced'] = model.pop('last_synced')
+        payload = {'last_synced': model.pop('last_synced')}
         payload['delete_sets'] = self.deleted_sets_transformer.to_payload(None)
         for set_name, transformer in self.mapping.items():
             internal_model = self.storage.filter(

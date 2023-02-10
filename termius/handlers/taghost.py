@@ -43,10 +43,7 @@ class TagListArgs(object):
 
     def get_or_create_tag_instances(self, tag_label_list):
         """Get tag list from list of tag label."""
-        tags = [
-            self.get_or_create_tag(i) for i in tag_label_list
-        ]
-        return tags
+        return [self.get_or_create_tag(i) for i in tag_label_list]
 
     def get_or_create_tag(self, tag_label):
         """Get or create new tag instance by tag_label."""

@@ -96,9 +96,7 @@ setup(
         'Topic :: Utilities',
     ],
     entry_points={
-        'console_scripts': [
-            '{} = termius.main:main'.format(cli_command_name)
-        ],
+        'console_scripts': [f'{cli_command_name} = termius.main:main'],
         'termius.handlers': handlers,
         'termius.info.formatters': [
             'ssh = termius.formatters.ssh:SshFormatter',

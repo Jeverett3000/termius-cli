@@ -102,8 +102,5 @@ def on_clean_when_logout(command, manager):
     except OptionNotSetException:
         new_username = None
 
-    is_username_changed = (
-        old_username and old_username != new_username
-    )
-    if is_username_changed:
+    if is_username_changed := (old_username and old_username != new_username):
         post_logout.send(command, command=command, email=old_username)

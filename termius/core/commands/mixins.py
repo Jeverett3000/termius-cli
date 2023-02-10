@@ -45,14 +45,14 @@ class GetRelationMixin(object):
     def fail_not_exist(self, model_class):
         """Raise an error about not existed instance."""
         raise ArgumentRequiredException(
-            'Not found any {} instance.'.format(model_class.__name__.lower())
+            f'Not found any {model_class.__name__.lower()} instance.'
         )
 
     # pylint: disable=no-self-use
     def fail_too_many(self, model_class):
         """Raise an error about too many instances."""
         raise ArgumentRequiredException(
-            'Found too many {} instances.'.format(model_class.__name__.lower())
+            f'Found too many {model_class.__name__.lower()} instances.'
         )
 
     def get_safely_instance(self, model_class, arg):
@@ -107,21 +107,13 @@ class SshConfigPrepareMixin(PrepareResultMixin):
     def ssh_config_fields(self):
         """Return ssh config fields."""
         fields = SshConfig.allowed_fields()
-        field_format = 'ssh_config.{}'.format
-        return [
-            field_format(i) for i in fields
-            if i != 'identity'
-        ]
+        return [f'ssh_config.{i}' for i in fields if i != 'identity']
 
     @property
     def identity_fields(self):
         """Return identity fields."""
         fields = Identity.allowed_fields()
-        field_format = 'ssh_config.identity.{}'.format
-        return [
-            field_format(i) for i in fields
-            if i != 'identity'
-        ]
+        return [f'ssh_config.identity.{i}' for i in fields if i != 'identity']
 
 
 class GetObjectsMixin(object):
@@ -133,13 +125,14 @@ class GetObjectsMixin(object):
         Models will match id and label with passed ids__names list.
         """
         ids, names = parse_ids_names(ids__names)
-        instances = self.storage.filter(
-            self.model_class, any,
-            **{'id.rcontains': ids, 'label.rcontains': names}
-        )
-        if not instances:
+        if instances := self.storage.filter(
+            self.model_class,
+            any,
+            **{'id.rcontains': ids, 'label.rcontains': names},
+        ):
+            return instances
+        else:
             raise DoesNotExistException("There aren't any instance.")
-        return instances
 
 
 class ArgModelSerializerMixin(object):
@@ -231,7 +224,7 @@ class InstanceOperationMixin(ArgModelSerializerMixin, object):
         self.log.info(message)
 
         if os.getenv('TERMIUS_CLI_DEBUG'):
-            self.app.stdout.write('{}\n'.format(entry.id))
+            self.app.stdout.write(f'{entry.id}\n')
 
 
 class GroupStackGetterMixin(object):
@@ -261,8 +254,7 @@ class SshConfigMergerMixin(GroupStackGetterMixin, object):
         ssh_config_merger = self.get_ssh_config_merger(full_stack)
         identity_merger = self.get_identity_merger(ssh_config_merger)
         ssh_config = ssh_config_merger.merge()
-        visible_identity = self.get_visible_identity(ssh_config_merger)
-        if visible_identity:
+        if visible_identity := self.get_visible_identity(ssh_config_merger):
             ssh_config.identity = visible_identity
         else:
             ssh_config.identity = identity_merger.merge()

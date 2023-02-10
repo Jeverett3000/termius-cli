@@ -8,7 +8,7 @@ from paramiko.config import SSHConfig
 class SSHConfigParser(SSHConfig):
     """Class to override parse method of paramiko parser."""
 
-    def parse(self, file_obj): # noqa
+    def parse(self, file_obj):    # noqa
         """
         Read an OpenSSH config from the given file object.
 
@@ -34,9 +34,9 @@ class SSHConfigParser(SSHConfig):
 
             match = re.match(self.SETTINGS_REGEX, line)
             if not match:
-                raise Exception('Unparsable line %s' % line)
-            key = match.group(1).lower()
-            value = match.group(2)
+                raise Exception(f'Unparsable line {line}')
+            key = match[1].lower()
+            value = match[2]
             if key == 'host':
                 self._config.append(host)
                 host = {

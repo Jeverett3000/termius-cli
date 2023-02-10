@@ -52,59 +52,62 @@ class BulkTransformerTest(StrategyCase):
         host = self.storage.save(host)
         last_synced_data = dict(last_synced='')
         payload = self.transformer.to_payload(last_synced_data)
-        self.assertEqual(payload, {
-            'host_set': [
-                {
-                    'label': payload['host_set'][0]['label'],
-                    'group': None,
-                    'ssh_config': 'sshconfig_set/{}'.format(ssh_config.id),
-                    'local_id': host.id,
-                    'address': None,
-                    'interaction_date': host.interaction_date,
-                }
-            ],
-            'sshconfig_set': [
-                {
-                    'font_size': None,
-                    'keep_alive_packages': None,
-                    'charset': None,
-                    'identity': 'identity_set/{}'.format(identity.id),
-                    'local_id': ssh_config.id,
-                    'use_ssh_key': None,
-                    'timeout': None,
-                    'color_scheme': None,
-                    'is_forward_ports': None,
-                    'strict_host_key_check': None,
-                    'port': None,
-                    'startup_snippet': None,
-                    'cursor_blink': None
-                }
-            ],
-            'snippet_set': [],
-            'last_synced': '',
-            'sshkeycrypt_set': [
-                {
-                    'public_key': None,
-                    'private_key': None,
-                    'local_id': ssh_key.id,
-                    'label': payload['sshkeycrypt_set'][0]['label']
-                }
-            ],
-            'group_set': [],
-            'tag_set': [],
-            'taghost_set': [],
-            'pfrule_set': [],
-            'delete_sets': {},
-            'identity_set': [
-                {
-                    'username': None,
-                    'is_visible': None,
-                    'ssh_key': 'sshkeycrypt_set/{}'.format(ssh_key.id),
-                    'label': payload['identity_set'][0]['label'],
-                    'local_id': identity.id
-                }
-            ]
-        })
+        self.assertEqual(
+            payload,
+            {
+                'host_set': [
+                    {
+                        'label': payload['host_set'][0]['label'],
+                        'group': None,
+                        'ssh_config': f'sshconfig_set/{ssh_config.id}',
+                        'local_id': host.id,
+                        'address': None,
+                        'interaction_date': host.interaction_date,
+                    }
+                ],
+                'sshconfig_set': [
+                    {
+                        'font_size': None,
+                        'keep_alive_packages': None,
+                        'charset': None,
+                        'identity': f'identity_set/{identity.id}',
+                        'local_id': ssh_config.id,
+                        'use_ssh_key': None,
+                        'timeout': None,
+                        'color_scheme': None,
+                        'is_forward_ports': None,
+                        'strict_host_key_check': None,
+                        'port': None,
+                        'startup_snippet': None,
+                        'cursor_blink': None,
+                    }
+                ],
+                'snippet_set': [],
+                'last_synced': '',
+                'sshkeycrypt_set': [
+                    {
+                        'public_key': None,
+                        'private_key': None,
+                        'local_id': ssh_key.id,
+                        'label': payload['sshkeycrypt_set'][0]['label'],
+                    }
+                ],
+                'group_set': [],
+                'tag_set': [],
+                'taghost_set': [],
+                'pfrule_set': [],
+                'delete_sets': {},
+                'identity_set': [
+                    {
+                        'username': None,
+                        'is_visible': None,
+                        'ssh_key': f'sshkeycrypt_set/{ssh_key.id}',
+                        'label': payload['identity_set'][0]['label'],
+                        'local_id': identity.id,
+                    }
+                ],
+            },
+        )
         eq_(host.label, self.cryptor.decrypt(
             payload['host_set'][0]['label']
         ))
@@ -131,41 +134,44 @@ class BulkTransformerTest(StrategyCase):
         host = self.storage.save(host)
         last_synced_data = dict(last_synced='')
         payload = self.transformer.to_payload(last_synced_data)
-        self.assertEqual(payload, {
-            'host_set': [
-                {
-                    'label': payload['host_set'][0]['label'],
-                    'group': None,
-                    'ssh_config': 'sshconfig_set/{}'.format(ssh_config.id),
-                    'local_id': host.id,
-                    'address': None,
-                    'interaction_date': host.interaction_date,
-                }
-            ],
-            'sshconfig_set': [
-                {
-                    'font_size': None,
-                    'keep_alive_packages': None,
-                    'charset': None,
-                    'local_id': ssh_config.id,
-                    'use_ssh_key': None,
-                    'timeout': None,
-                    'color_scheme': None,
-                    'is_forward_ports': None,
-                    'strict_host_key_check': None,
-                    'port': None,
-                    'startup_snippet': None,
-                    'cursor_blink': None
-                }
-            ],
-            'snippet_set': [],
-            'last_synced': '',
-            'group_set': [],
-            'tag_set': [],
-            'taghost_set': [],
-            'pfrule_set': [],
-            'delete_sets': {},
-        })
+        self.assertEqual(
+            payload,
+            {
+                'host_set': [
+                    {
+                        'label': payload['host_set'][0]['label'],
+                        'group': None,
+                        'ssh_config': f'sshconfig_set/{ssh_config.id}',
+                        'local_id': host.id,
+                        'address': None,
+                        'interaction_date': host.interaction_date,
+                    }
+                ],
+                'sshconfig_set': [
+                    {
+                        'font_size': None,
+                        'keep_alive_packages': None,
+                        'charset': None,
+                        'local_id': ssh_config.id,
+                        'use_ssh_key': None,
+                        'timeout': None,
+                        'color_scheme': None,
+                        'is_forward_ports': None,
+                        'strict_host_key_check': None,
+                        'port': None,
+                        'startup_snippet': None,
+                        'cursor_blink': None,
+                    }
+                ],
+                'snippet_set': [],
+                'last_synced': '',
+                'group_set': [],
+                'tag_set': [],
+                'taghost_set': [],
+                'pfrule_set': [],
+                'delete_sets': {},
+            },
+        )
         eq_(host.label, self.cryptor.decrypt(
             payload['host_set'][0]['label']
         ))
